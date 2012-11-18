@@ -104,8 +104,31 @@ move([[X1, Y1],[X2, Y2]], [[X, Y, C, D]|T], [[X, Y, C, D]|T1]) :-  move([[X1, Y1
 	
 %----------------------------------------------------------------------------------
 %		Checking if the move is legal for the given piece
-%----------------------------------------------------------------------------------													
-%specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 	%dummy rule to allow all moves for the time being						
+%----------------------------------------------------------------------------------		
+
+% Defining some dependancies
+
+doublePawnWhiteMove(X, Y) :- X = 1, Y = 5.
+doublePawnWhiteMove(X, Y) :- X = 2, Y = 5.
+doublePawnWhiteMove(X, Y) :- X = 3, Y = 5.
+doublePawnWhiteMove(X, Y) :- X = 4, Y = 5.
+doublePawnWhiteMove(X, Y) :- X = 5, Y = 5.
+doublePawnWhiteMove(X, Y) :- X = 5, Y = 4.
+doublePawnWhiteMove(X, Y) :- X = 5, Y = 3.
+doublePawnWhiteMove(X, Y) :- X = 5, Y = 2.
+doublePawnWhiteMove(X, Y) :- X = 5, Y = 1.	
+doublePawnBlackMove(X, Y) :- X = 7, Y = 11.
+doublePawnBlackMove(X, Y) :- X = 7, Y = 10.
+doublePawnBlackMove(X, Y) :- X = 7, Y = 9.
+doublePawnBlackMove(X, Y) :- X = 7, Y = 8.
+doublePawnBlackMove(X, Y) :- X = 7, Y = 7.
+doublePawnBlackMove(X, Y) :- X = 8, Y = 7.
+doublePawnBlackMove(X, Y) :- X = 9, Y = 7.
+doublePawnBlackMove(X, Y) :- X = 10, Y = 7.
+doublePawnBlackMove(X, Y) :- X = 11, Y = 7.	
+				
+%dummy rule to allow all moves for the time being											
+%specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 						
 			
 %----------------------------------------------------------------------------------
 %							THE PAWNS
@@ -137,34 +160,22 @@ specificlegal(Position, p, b, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1, Y2 =:= Y1 - 1
 specificlegal(Position, p, b, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 - 1, Y2 =:= Y1, 
 														get_piece_at_position(Position, X2, Y2, Piece1, w).		
 		
-doublePawnWhiteMove(X, Y) :- X = 1, Y = 5.
-doublePawnWhiteMove(X, Y) :- X = 2, Y = 5.
-doublePawnWhiteMove(X, Y) :- X = 3, Y = 5.
-doublePawnWhiteMove(X, Y) :- X = 4, Y = 5.
-doublePawnWhiteMove(X, Y) :- X = 5, Y = 5.
-doublePawnWhiteMove(X, Y) :- X = 5, Y = 4.
-doublePawnWhiteMove(X, Y) :- X = 5, Y = 3.
-doublePawnWhiteMove(X, Y) :- X = 5, Y = 2.
-doublePawnWhiteMove(X, Y) :- X = 5, Y = 1.	
-doublePawnBlackMove(X, Y) :- X = 7, Y = 11.
-doublePawnBlackMove(X, Y) :- X = 7, Y = 10.
-doublePawnBlackMove(X, Y) :- X = 7, Y = 9.
-doublePawnBlackMove(X, Y) :- X = 7, Y = 8.
-doublePawnBlackMove(X, Y) :- X = 7, Y = 7.
-doublePawnBlackMove(X, Y) :- X = 8, Y = 7.
-doublePawnBlackMove(X, Y) :- X = 9, Y = 7.
-doublePawnBlackMove(X, Y) :- X = 10, Y = 7.
-doublePawnBlackMove(X, Y) :- X = 11, Y = 7.													
+	
+											
 %----------------------------------------------------------------------------------
-%							THE PAWNS
+%							THE BISHOPS
 %----------------------------------------------------------------------------------														
 														
-				
+specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 + 2*C, clearDiagonalLOS([[X1, Y1], [X2, Y2]]).			
+specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + 2*C, Y2 =:= Y1 + C, clearDiagonalLOS([[X1, Y1], [X2, Y2]]).						
+specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 - C, clearDiagonalLOS([[X1, Y1], [X2, Y2]]).						
 					
-					
-					
-					
-					
+%----------------------------------------------------------------------------------
+%							THE ROOKS
+%----------------------------------------------------------------------------------							
+specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1, Y2 =:= Y1 + C, clearLinearLOS([[X1, Y1], [X2, Y2]])	.	
+specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1, clearLinearLOS([[X1, Y1], [X2, Y2]])	.	
+specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1 + C, clearLinearLOS([[X1, Y1], [X2, Y2]])	.		
 					
 					
 					
