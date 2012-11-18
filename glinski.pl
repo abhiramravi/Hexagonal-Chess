@@ -55,25 +55,38 @@ initialize(Game, Position, Player) :-
 												
 						],
 			Player = self.
-
+%----------------------------------------------------------------------------------
+%		Displaying the game
+%----------------------------------------------------------------------------------		
 display_game(Position, Player) :- write(Position).
 
-
+%----------------------------------------------------------------------------------
+%		Getting the piece for the given position 
+%----------------------------------------------------------------------------------		
+get_piece_at_position([], X, Y, Piece, Type) :- !.
 get_piece_at_position([[X, Y, C, D]|T], X, Y, Piece, Type) :- Piece = D, Type = C.			
 get_piece_at_position([[A, B, C, D]|T], X, Y, Piece, Type) :- get_piece_at_position(T, X, Y, Piece, Type).
 
+%----------------------------------------------------------------------------------
+%		Checking if the position coordinate given is empty
+%----------------------------------------------------------------------------------		
 empty(Position, X, Y) :- not(get_piece_at_position(Position, X, Y, Piece, Type)).
 			
-			
+%----------------------------------------------------------------------------------
+%		Checking if the move tried is legal
+%----------------------------------------------------------------------------------				
 legal(Position, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
-											legal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
+											specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
 											empty(Position, X2, Y2).
 
 legal(Position, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
-											legal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
+											specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
 											get_piece_at_position(Position, X2, Y2, Piece1, other_type(Type)).									
-											
-legal(Position, Piece, [[X1, Y1], [X2, Y2]]) :- Piece = wp, X2 = X1 + 1, Y2 = Y1 + 1.											
+	
+%----------------------------------------------------------------------------------
+%		Checking if the move is legal for the given piece
+%----------------------------------------------------------------------------------													
+specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 	%dummy rule to allow all moves for the time being						
 			
 			
 								
