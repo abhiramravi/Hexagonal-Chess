@@ -54,7 +54,7 @@ initialize(Game, Position, Player) :-
 							[11, 11, b, b], [10, 10, b, b], [9, 9, b, b]
 												
 						],
-			Player = self.
+			Player = w.
 %----------------------------------------------------------------------------------
 %		Displaying the game
 %----------------------------------------------------------------------------------		
@@ -83,12 +83,13 @@ empty([_|T], X, Y, Result) :- empty(T, X, Y, Result).
 %		Checking if the move tried is legal
 %----------------------------------------------------------------------------------				
 legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
-													specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
-													empty(Position, X2, Y2, Result), Result = 1.
+												specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
+												empty(Position, X2, Y2, Result), Result = 1.
 
 legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
-													specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
-													get_piece_at_position(Position, X2, Y2, Piece1, other_type(Type)).									
+												specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
+												get_piece_at_position(Position, X2, Y2, Piece1, other_type(Type)).									
+												
 %----------------------------------------------------------------------------------
 %		Performing the move given on the current board
 %----------------------------------------------------------------------------------	
