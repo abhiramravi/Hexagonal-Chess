@@ -61,6 +61,8 @@ display_game(Position, Player) :- write(Position).
 
 get_piece_at_position([[X, Y, C, D]|T], X, Y, Piece, Type) :- Piece = D, Type = C.			
 get_piece_at_position([[A, B, C, D]|T], X, Y, Piece, Type) :- get_piece_at_position(T, X, Y, Piece, Type).
+
+empty(Position, X, Y) :- not(get_piece_at_position(Position, X, Y, Piece, Type)).
 			
 			
 legal(Position, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
