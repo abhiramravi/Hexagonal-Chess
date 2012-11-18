@@ -125,8 +125,43 @@ doublePawnBlackMove(X, Y) :- X = 7, Y = 7.
 doublePawnBlackMove(X, Y) :- X = 8, Y = 7.
 doublePawnBlackMove(X, Y) :- X = 9, Y = 7.
 doublePawnBlackMove(X, Y) :- X = 10, Y = 7.
-doublePawnBlackMove(X, Y) :- X = 11, Y = 7.	
-				
+doublePawnBlackMove(X, Y) :- X = 11, Y = 7.
+
+clearDiagonalLOS1(Position, [[X1, Y1], [X1, Y1]]).
+clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, empty(Position, X1 + 1, Y1 + 2, Result), Result = 1, 
+													clearDiagonalLOS1(Position, [[X1 + 1, Y1 + 2],[X2, Y2]]).
+clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, empty(Position, X1 - 1, Y1 - 2, Result), Result = 1.
+													clearDiagonalLOS1(Position, [[X1 - 1, Y1 - 2],[X2, Y2]]).
+clearDiagonalLOS2(Position, [[X1, Y1], [X1, Y1]]).
+clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, empty(Position, X1 + 2, Y1 + 1, Result), Result = 1.
+													clearDiagonalLOS2(Position, [[X1 + 2, Y1 + 1],[X2, Y2]]).
+clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, empty(Position, X1 - 2, Y1 - 1, Result), Result = 1.
+													clearDiagonalLOS2(Position, [[X1 + 2, Y1 + 1],[X2, Y2]]).
+
+clearDiagonalLOS3(Position, [[X1, Y1], [X1, Y1]]).
+clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, empty(Position, X1 + 1, Y1 - 1, Result), Result = 1.
+													clearDiagonalLOS3(Position, [[X1 + 1, Y1 - 1],[X2, Y2]]).
+clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, empty(Position, X1 - 1, Y1 + 1, Result), Result = 1.
+													clearDiagonalLOS3(Position, [[X1 + 1, Y1 - 1],[X2, Y2]]).
+													
+													
+clearLinearLOS1(Position, [[X1, Y1], [X1, Y1]]).
+clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 < Y2, empty(Position, X1, Y1 + 1, Result), Result = 1.
+													clearLinearLOS1(Position, [[X1 , Y1 + 1],[X2, Y2]]).
+clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, empty(Position, X1, Y1 - 1, Result), Result = 1.
+													clearLinearLOS1(Position, [[X1, Y1 - 1],[X2, Y2]]).	
+													
+clearLinearLOS2(Position, [[X1, Y1], [X1, Y1]]).
+clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 < X2, empty(Position, X1 + 1, Y1, Result), Result = 1.
+													clearLinearLOS2(Position, [[X1 + 1, Y1],[X2, Y2]]).
+clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 > X2, empty(Position, X1 - 1, Y1, Result), Result = 1.
+													clearLinearLOS2(Position, [[X1 - 1, Y1],[X2, Y2]]).
+													
+clearLinearLOS3(Position, [[X1, Y1], [X1, Y1]]).
+clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 < Y2, empty(Position, X1 + 1, Y1 + 1, Result), Result = 1.
+													clearLinearLOS3(Position, [[X1 + 1 , Y1 + 1],[X2, Y2]]).
+clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, empty(Position, X1 - 1, Y1 - 1, Result), Result = 1.
+													clearLinearLOS3(Position, [[X1 - 1, Y1 + 1],[X2, Y2]]).
 %dummy rule to allow all moves for the time being											
 %specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 						
 			
@@ -165,9 +200,9 @@ specificlegal(Position, p, b, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 - 1, Y2 =:= Y1
 %----------------------------------------------------------------------------------
 %							THE BISHOPS
 %----------------------------------------------------------------------------------														
-specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 + 2*C, clearDiagonalLOS([[X1, Y1], [X2, Y2]]).			
-specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + 2*C, Y2 =:= Y1 + C, clearDiagonalLOS([[X1, Y1], [X2, Y2]]).						
-specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 - C, clearDiagonalLOS([[X1, Y1], [X2, Y2]]).		
+specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 + 2*C, clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]).			
+specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + 2*C, Y2 =:= Y1 + C, clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]).						
+specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 - C, clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]).		
 
 %----------------------------------------------------------------------------------
 %							THE KNIGHTS
@@ -188,9 +223,9 @@ specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 + 1, Y2 = Y1 - 2.
 %----------------------------------------------------------------------------------
 %							THE ROOKS
 %----------------------------------------------------------------------------------							
-specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1, Y2 =:= Y1 + C, clearLinearLOS([[X1, Y1], [X2, Y2]])	.	
-specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1, clearLinearLOS([[X1, Y1], [X2, Y2]])	.	
-specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1 + C, clearLinearLOS([[X1, Y1], [X2, Y2]])	.		
+specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1, Y2 =:= Y1 + C, clearLinearLOS1([[X1, Y1], [X2, Y2]]).	
+specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1, clearLinearLOS2([[X1, Y1], [X2, Y2]]).	
+specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1 + C, clearLinearLOS3([[X1, Y1], [X2, Y2]]).		
 
 %----------------------------------------------------------------------------------
 %							THE QUEEN
@@ -201,12 +236,12 @@ specificlegal(Position, q, _, [[X1, Y1], [X2, Y2]]) 	:- specificlegal(Position, 
 %----------------------------------------------------------------------------------
 %							THE KING
 %----------------------------------------------------------------------------------						
-specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 + 2*C, C <= 1, C >= -1. C =\= 0.	
-specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + 2*C, Y2 =:= Y1 + C, C <= 1, C >= -1. C =\= 0.						
-specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 - C, C <= 1, C >= -1. C =\= 0.		
-specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1, Y2 =:= Y1 + C, C <= 1, C >= -1. C =\= 0.	
-specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1, C <= 1, C >= -1. C =\= 0.	
-specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1 + C, C <= 1, C >= -1. C =\= 0.	
+specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 + 2*C, C =< 1, C >= -1, C =\= 0.	
+specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + 2*C, Y2 =:= Y1 + C, C =< 1, C >= -1, C =\= 0.						
+specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 - C, C =< 1, C >= -1, C =\= 0.		
+specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1, Y2 =:= Y1 + C, C =< 1, C >= -1, C =\= 0.	
+specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1, C =< 1, C >= -1, C =\= 0.	
+specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1 + C, C =< 1, C >= -1, C =\= 0.	
 
 						
 					
