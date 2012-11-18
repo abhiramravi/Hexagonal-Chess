@@ -60,24 +60,31 @@ initialize(Game, Position, Player) :-
 %----------------------------------------------------------------------------------		
 display_game(Position, Player) :- write(Position).
 
+%func():-
+
+% Implementing NOT
+%notfunc(A):-func(A),!,fail.
+%notfunc(A).
 %----------------------------------------------------------------------------------
 %		Getting the piece for the given position 
 %----------------------------------------------------------------------------------		
-get_piece_at_position([], X, Y, Piece, Type) :- !.
+get_piece_at_position([], X, Y, Piece, Type) :- fail.
 get_piece_at_position([[X, Y, C, D]|T], X, Y, Piece, Type) :- Piece = D, Type = C.			
 get_piece_at_position([[A, B, C, D]|T], X, Y, Piece, Type) :- get_piece_at_position(T, X, Y, Piece, Type).
 
 %----------------------------------------------------------------------------------
 %		Checking if the position coordinate given is empty
-%----------------------------------------------------------------------------------		
-empty(Position, X, Y) :- not(get_piece_at_position(Position, X, Y, Piece, Type)).
+%----------------------------------------------------------------------------------
+empty([], X, Y, 1).
+empty([[X, Y, C, D]|T], X, Y, 0).
+empty([_|T], X, Y, Result) :- empty(T, X, Y, Result). 
 			
 %----------------------------------------------------------------------------------
 %		Checking if the move tried is legal
 %----------------------------------------------------------------------------------				
 legal(Position, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
 											specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
-											empty(Position, X2, Y2).
+											empty(Position, X2, Y2, Result), Result = 1.
 
 legal(Position, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
 											specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
@@ -88,5 +95,54 @@ legal(Position, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1
 %----------------------------------------------------------------------------------													
 specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 	%dummy rule to allow all moves for the time being						
 			
-			
+	
+%----------------------------------------------------------------------------------
+%		Performing the move given on the current board
+%----------------------------------------------------------------------------------	
+% If the entry point of move is the one being seen, then change its coordinate to 
+% the exit point of move and add to the Position1	
+
+move(_, [], []). 
+move([[X1, Y1],[X2, Y2]], [[X1, Y1, C, D]|T] , [[X2, Y2, C, D]|T1]) :- move([[X1, Y1],[X2, Y2]],T,T1).
+move([[X1, Y1],[X2, Y2]], [[X2, Y2, C, D]|T] , T1) :- move([[X1, Y1],[X2, Y2]], T , T1).
+move([[X1, Y1],[X2, Y2]], [[X, Y, C, D]|T] , [[X, Y, C, D]|T1]) :-  move([[X1, Y1],[X2, Y2]], T, T1).
+
+
+
+		
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 								
