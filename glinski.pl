@@ -165,23 +165,50 @@ specificlegal(Position, p, b, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 - 1, Y2 =:= Y1
 %----------------------------------------------------------------------------------
 %							THE BISHOPS
 %----------------------------------------------------------------------------------														
-														
 specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 + 2*C, clearDiagonalLOS([[X1, Y1], [X2, Y2]]).			
 specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + 2*C, Y2 =:= Y1 + C, clearDiagonalLOS([[X1, Y1], [X2, Y2]]).						
-specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 - C, clearDiagonalLOS([[X1, Y1], [X2, Y2]]).						
-					
+specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 - C, clearDiagonalLOS([[X1, Y1], [X2, Y2]]).		
+
+%----------------------------------------------------------------------------------
+%							THE KNIGHTS
+%----------------------------------------------------------------------------------					
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 + 3, Y2 = Y1 + 2.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 + 3, Y2 = Y1 + 1.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 - 3, Y2 = Y1 - 2.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 - 3, Y2 = Y1 - 1.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 - 2, Y2 = Y1 + 1.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 - 1, Y2 = Y1 + 2.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 - 3, Y2 = Y1 + 2.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 - 3, Y2 = Y1 + 1.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 + 3, Y2 = Y1 - 1.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 + 3, Y2 = Y1 - 2.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 + 2, Y2 = Y1 - 1.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 = X1 + 1, Y2 = Y1 - 2.		
+		
 %----------------------------------------------------------------------------------
 %							THE ROOKS
 %----------------------------------------------------------------------------------							
 specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1, Y2 =:= Y1 + C, clearLinearLOS([[X1, Y1], [X2, Y2]])	.	
 specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1, clearLinearLOS([[X1, Y1], [X2, Y2]])	.	
 specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1 + C, clearLinearLOS([[X1, Y1], [X2, Y2]])	.		
+
+%----------------------------------------------------------------------------------
+%							THE QUEEN
+%----------------------------------------------------------------------------------						
+specificlegal(Position, q, _, [[X1, Y1], [X2, Y2]]) 	:- specificlegal(Position, r, _, [[X1, Y1], [X2, Y2]]).
+specificlegal(Position, q, _, [[X1, Y1], [X2, Y2]]) 	:- specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]).				
 					
-					
-					
-					
-					
-					
+%----------------------------------------------------------------------------------
+%							THE KING
+%----------------------------------------------------------------------------------						
+specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 + 2*C, C <= 1, C >= -1. C =\= 0.	
+specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + 2*C, Y2 =:= Y1 + C, C <= 1, C >= -1. C =\= 0.						
+specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]]) 	:- X2 =:= X1 + C, Y2 =:= Y1 - C, C <= 1, C >= -1. C =\= 0.		
+specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1, Y2 =:= Y1 + C, C <= 1, C >= -1. C =\= 0.	
+specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1, C <= 1, C >= -1. C =\= 0.	
+specificlegal(Position, k, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + C, Y2 =:= Y1 + C, C <= 1, C >= -1. C =\= 0.	
+
+						
 					
 					
 					
