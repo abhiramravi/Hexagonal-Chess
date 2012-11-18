@@ -39,9 +39,9 @@ initialize(Game, Position, Player) :-
 			Position =	[
 							% White's pieces :
 							% The white pawns
-							[1, 5, 7, w, p], [2, 5, 7, w, p], [3, 5, 7, w, p], [4, 5, 7, w, p], [5, 5, 7, w, p], [5, 4, 7, w, p], [5, 3, 7, w, p], [5, 2, 7, w, p], [5, 1, 7, w, p], 
+							[1, 5, w, p], [2, 5, w, p], [3, 5, w, p], [4, 5, w, p], [5, 5, w, p], [5, 4, w, p], [5, 3, w, p], [5, 2, w, p], [5, 1, w, p], 
 							% Other pieces of white
-							[1, 4, 8, w, r], [1, 3, 9, w, n], [1, 2, 10, w, q], [4, 1, 8, w, r], [3, 1, 9, w, n], [2, 1, 10, w, k],
+							[1, 4, w, r], [1, 3, w, n], [1, 2, w, q], [4, 1, w, r], [3, 1, w, n], [2, 1, w, k],
 							% The three bishops
 							[1, 1, w, b], [2, 2, w, b], [3, 3, w, b],
 												
@@ -59,15 +59,16 @@ initialize(Game, Position, Player) :-
 display_game(Position, Player) :- write(Position).
 
 
-get_piece_at_position(Position, X, Y, Piece) :- .			
+get_piece_at_position([[X, Y, C, D]|T], X, Y, Piece, Type) :- Piece = D, Type = C.			
+get_piece_at_position([[A, B, C, D]|T], X, Y, Piece, Type) :- get_piece_at_position(T, X, Y, Piece, Type).
 			
 			
 legal(Position, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
-											legal(Position, Piece, [[X1, Y1], [X2, Y2]]),
+											legal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
 											empty(Position, X2, Y2).
 
 legal(Position, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
-											legal(Position, Piece, [[X1, Y1], [X2, Y2]]),
+											legal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
 											get_piece_at_position(Position, X2, Y2, Piece1, other_type(Type)).									
 											
 legal(Position, Piece, [[X1, Y1], [X2, Y2]]) :- Piece = wp, X2 = X1 + 1, Y2 = Y1 + 1.											
