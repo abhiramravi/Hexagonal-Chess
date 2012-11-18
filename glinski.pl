@@ -22,14 +22,14 @@ play(Game) :- 						initialize(Game, Position, Player),
 									play(Position, Player, Result).
 				
 choose_move(Position, Player, Move) :- 	read(Move), 
-										legal(Position, Move).
+										legal(Position, Player, Move).
 										
 
 %----------------------------------------------------------------------------------
 %		The implementations of the above functions
 %----------------------------------------------------------------------------------									
-next_player(Player, Player1) :- Player = self, Player1 = computer.
-next_player(Player, Player1) :- Player = computer, Player1 = self.
+next_player(Player, Player1) :- Player = w, Player1 = b.
+next_player(Player, Player1) :- Player = b, Player1 = w.
 
 other_type(Type, Type1) :- Type = w, Type1 = b.
 other_type(Type, Type1) :- Type = b, Type1 = w.
@@ -82,20 +82,13 @@ empty([_|T], X, Y, Result) :- empty(T, X, Y, Result).
 %----------------------------------------------------------------------------------
 %		Checking if the move tried is legal
 %----------------------------------------------------------------------------------				
-legal(Position, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
-											specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
-											empty(Position, X2, Y2, Result), Result = 1.
+legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
+													specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
+													empty(Position, X2, Y2, Result), Result = 1.
 
-legal(Position, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
-											specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
-											get_piece_at_position(Position, X2, Y2, Piece1, other_type(Type)).									
-	
-%----------------------------------------------------------------------------------
-%		Checking if the move is legal for the given piece
-%----------------------------------------------------------------------------------													
-specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 	%dummy rule to allow all moves for the time being						
-			
-	
+legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X1, Y1, Piece, Type),
+													specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]),
+													get_piece_at_position(Position, X2, Y2, Piece1, other_type(Type)).									
 %----------------------------------------------------------------------------------
 %		Performing the move given on the current board
 %----------------------------------------------------------------------------------	
@@ -104,8 +97,17 @@ specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 	%dummy rule to allo
 
 move(_, [], []). 
 move([[X1, Y1],[X2, Y2]], [[X1, Y1, C, D]|T] , [[X2, Y2, C, D]|T1]) :- move([[X1, Y1],[X2, Y2]],T,T1).
-move([[X1, Y1],[X2, Y2]], [[X2, Y2, C, D]|T] , T1) :- move([[X1, Y1],[X2, Y2]], T , T1).
-move([[X1, Y1],[X2, Y2]], [[X, Y, C, D]|T] , [[X, Y, C, D]|T1]) :-  move([[X1, Y1],[X2, Y2]], T, T1).
+move([[X1, Y1],[X2, Y2]], [[X2, Y2, C, D]|T] , T1) :- move([[X1, Y1],[X2, Y2]], T, T1).
+move([[X1, Y1],[X2, Y2]], [[X, Y, C, D]|T], [[X, Y, C, D]|T1]) :-  move([[X1, Y1],[X2, Y2]], T, T1).
+
+	
+%----------------------------------------------------------------------------------
+%		Checking if the move is legal for the given piece
+%----------------------------------------------------------------------------------													
+specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 	%dummy rule to allow all moves for the time being						
+			
+	
+
 
 
 
