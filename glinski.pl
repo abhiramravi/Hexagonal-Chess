@@ -130,39 +130,39 @@ doublePawnBlackMove(X, Y) :- X = 10, Y = 7.
 doublePawnBlackMove(X, Y) :- X = 11, Y = 7.
 
 clearDiagonalLOS1(Position, [[X1, Y1], [X1, Y1]]).
-clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, empty(Position, X, Y, Result),!, Result = 1, X is X1 + 1, Y is Y1 + 2,!,
+clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, X is X1 + 1, Y is Y1 + 2,empty(Position, X, Y, Result),!, Result = 1, 
 													clearDiagonalLOS1(Position, [[X, Y],[X2, Y2]]).
-clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, empty(Position, X, Y, Result),!, Result = 1, X is X1 - 1, Y is Y1 - 2,!,
+clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, X is X1 - 1, Y is Y1 - 2,empty(Position, X, Y, Result),!, Result = 1, 
 													clearDiagonalLOS1(Position, [[X, Y],[X2, Y2]]).
 clearDiagonalLOS2(Position, [[X1, Y1], [X1, Y1]]).
-clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, empty(Position, X, Y, Result),!, Result = 1, X is X1 + 2, Y is Y1 + 1,!,
+clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, X is X1 + 2, Y is Y1 + 1,empty(Position, X, Y, Result),!, Result = 1, 
 													clearDiagonalLOS2(Position, [[X, Y],[X2, Y2]]).
-clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, empty(Position, X, Y, Result),!, Result = 1, X is X1 - 2, Y is Y1 - 1,!,
+clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, X is X1 - 2, Y is Y1 - 1,empty(Position, X, Y, Result),!, Result = 1, 
 													clearDiagonalLOS2(Position, [[X, Y],[X2, Y2]]).
 
 clearDiagonalLOS3(Position, [[X1, Y1], [X1, Y1]]).
-clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, empty(Position, X, Y, Result),!, Result = 1, X is X1 + 1, Y is Y1 - 1,!,
+clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2,  X is X1 + 1, Y is Y1 - 1,empty(Position, X, Y, Result),!, Result = 1, 
 													clearDiagonalLOS3(Position, [[X, Y],[X2, Y2]]).
-clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, empty(Position, X, Y, Result),!, Result = 1, X is X1 - 1, Y is Y1 + 1,!,
+clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2,  X is X1 - 1, Y is Y1 + 1,empty(Position, X, Y, Result),!, Result = 1, 
 													clearDiagonalLOS3(Position, [[X, Y],[X2, Y2]]).
 													
 													
 clearLinearLOS1(Position, [[X1, Y1], [X1, Y1]]).
-clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 < Y2, empty(Position, X, Y, Result),!, Result = 1, X is X1, Y is Y1 + 1,!,
+clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 < Y2, X is X1, Y is Y1 + 1,empty(Position, X, Y, Result),!, Result = 1, 
 													clearLinearLOS1(Position, [[X , Y],[X2, Y2]]).
-clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, empty(Position, X, Y, Result),!, Result = 1, X is X1, Y is Y1 - 1,!,
+clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, X is X1, Y is Y1 - 1,empty(Position, X, Y, Result),!, Result = 1, 
 													clearLinearLOS1(Position, [[X, Y],[X2, Y2]]).	
 													
 clearLinearLOS2(Position, [[X1, Y1], [X1, Y1]]).
-clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 < X2, empty(Position, X, Y, Result),!, Result = 1, X is X1 + 1, Y is Y1,!,
+clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 < X2, X is X1 + 1, Y is Y1,empty(Position, X, Y, Result),!, Result = 1, 
 													clearLinearLOS2(Position, [[X, Y],[X2, Y2]]).
-clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 > X2, empty(Position, X, Y, Result),!, Result = 1, X is X1 - 1, Y is Y1,!,
+clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 > X2, empty(Position, X, Y, Result),!, Result = 1, X is X1 - 1, Y is Y1,empty(Position, X, Y, Result),!, Result = 1, 
 													clearLinearLOS2(Position, [[X, Y],[X2, Y2]]).
 													
 clearLinearLOS3(Position, [[X1, Y1], [X1, Y1]]).
-clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 < Y2, empty(Position, X, Y, Result),!, Result = 1, X is X1 + 1, Y is Y1 + 1,!,
+clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 < Y2, X is X1 + 1, Y is Y1 + 1,empty(Position, X, Y, Result),!, Result = 1, 
 													clearLinearLOS3(Position, [[X , Y],[X2, Y2]]).
-clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, empty(Position, X, Y, Result),!, Result = 1, X is X1 - 1, Y is Y1 - 1,!,
+clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, X is X1 - 1, Y is Y1 - 1,empty(Position, X, Y, Result),!, Result = 1, 
 													clearLinearLOS3(Position, [[X, Y],[X2, Y2]]).
 %dummy rule to allow all moves for the time being											
 %specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 						
