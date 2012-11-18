@@ -84,7 +84,7 @@ empty([_|T], X, Y, Result) :- empty(T, X, Y, Result).
 %----------------------------------------------------------------------------------
 %		Checking if the move tried is legal
 %----------------------------------------------------------------------------------				
-legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	empty(Position, X2, Y2, Result),!, Result = 1, write('yes'), 
+legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	empty(Position, X2, Y2, Result),!, Result = 1, 
 												get_piece_at_position(Position, X1, Y1, Piece, Type), 
 												specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]).
 
@@ -212,18 +212,18 @@ specificlegal(Position, b, _, [[X1, Y1], [X2, Y2]]) 	:- C =< 100, C >= -100, X2 
 %----------------------------------------------------------------------------------
 %							THE KNIGHTS
 %----------------------------------------------------------------------------------					
-specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + 3, Y2 =:=  Y1 + 2.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:= X1 + 1, Y2 =:=  Y1 + 3.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 + 2, Y2 =:=  Y1 + 3.		
 specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 + 3, Y2 =:=  Y1 + 1.		
-specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 - 3, Y2 =:=  Y1 - 2.		
-specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 - 3, Y2 =:=  Y1 - 1.		
-specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 - 2, Y2 =:=  Y1 + 1.		
-specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 - 1, Y2 =:=  Y1 + 2.		
-specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 - 3, Y2 =:=  Y1 + 2.		
-specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 - 3, Y2 =:=  Y1 + 1.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 + 3, Y2 =:=  Y1 + 2.		
 specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 + 3, Y2 =:=  Y1 - 1.		
 specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 + 3, Y2 =:=  Y1 - 2.		
-specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 + 2, Y2 =:=  Y1 - 1.		
-specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 + 1, Y2 =:=  Y1 - 2.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 - 1, Y2 =:=  Y1 + 2.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 - 2, Y2 =:=  Y1 + 1.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 - 3, Y2 =:=  Y1 - 1.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 - 3, Y2 =:=  Y1 - 2.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 - 1, Y2 =:=  Y1 - 3.		
+specificlegal(Position, n, _, [[X1, Y1], [X2, Y2]])	:- X2 =:=  X1 - 2, Y2 =:=  Y1 - 3.		
 		
 %----------------------------------------------------------------------------------
 %							THE ROOKS
