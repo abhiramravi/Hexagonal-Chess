@@ -8,6 +8,7 @@
 
 play(Position, Player, Result):- 	choose_move(Position, Player, Move),
 									move(Move, Position, Position1),
+									notCheckKing(Position1, Player),
 									display_game(Position1, Player),
 									next_player(Player, Player1),
 									!,
@@ -22,8 +23,7 @@ play(Game) :- 						initialize(Game, Position, Player),
 									play(Position, Player, Result).
 				
 choose_move(Position, Player, Move) :- 	read(Move), 
-										legal(Position, Player, Move),
-										notCheckKing(Position, Player).
+										legal(Position, Player, Move).
 										
 
 %----------------------------------------------------------------------------------
@@ -132,37 +132,43 @@ doublePawnBlackMove(X, Y) :- X = 9, Y = 7.
 doublePawnBlackMove(X, Y) :- X = 10, Y = 7.
 doublePawnBlackMove(X, Y) :- X = 11, Y = 7.
 
-clearDiagonalLOS1(Position, [[X1, Y1], [X1, Y1]]).
+clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 =:= X2 + 1, Y1 =:= Y2 + 2.
+clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :-	X1 =:= X2 - 1, Y1 =:= Y2 - 2.
 clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, X is X1 + 1, Y is Y1 + 2,empty(Position, X, Y),
 													clearDiagonalLOS1(Position, [[X, Y],[X2, Y2]]).
 clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, X is X1 - 1, Y is Y1 - 2,empty(Position, X, Y),
 													clearDiagonalLOS1(Position, [[X, Y],[X2, Y2]]).
-clearDiagonalLOS2(Position, [[X1, Y1], [X1, Y1]]).
+clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :-	X2 =:= X1 + 2, Y2 =:= Y1 + 1.
+clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :-	X2 =:= X1 - 2, Y2 =:= Y1 - 1.
 clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, X is X1 + 2, Y is Y1 + 1,empty(Position, X, Y),
 													clearDiagonalLOS2(Position, [[X, Y],[X2, Y2]]).
 clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, X is X1 - 2, Y is Y1 - 1,empty(Position, X, Y),
 													clearDiagonalLOS2(Position, [[X, Y],[X2, Y2]]).
 
-clearDiagonalLOS3(Position, [[X1, Y1], [X1, Y1]]).
+clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X2 =:= X1 + 1, Y2 =:= Y1 - 1.
+clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X2 =:= X1 - 1, Y2 =:= Y1 + 1.
 clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2,  X is X1 + 1, Y is Y1 - 1,empty(Position, X, Y),
 													clearDiagonalLOS3(Position, [[X, Y],[X2, Y2]]).
 clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2,  X is X1 - 1, Y is Y1 + 1,empty(Position, X, Y),
 													clearDiagonalLOS3(Position, [[X, Y],[X2, Y2]]).
 													
 													
-clearLinearLOS1(Position, [[X1, Y1], [X1, Y1]]).
+clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :-	X2 =:= X1, Y2 =:= Y1 + 1.
+clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1, Y2 =:= Y1 - 1.
 clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 < Y2, X is X1, Y is Y1 + 1,empty(Position, X, Y),
 													clearLinearLOS1(Position, [[X , Y],[X2, Y2]]).
 clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, X is X1, Y is Y1 - 1,empty(Position, X, Y),
 													clearLinearLOS1(Position, [[X, Y],[X2, Y2]]).	
 													
-clearLinearLOS2(Position, [[X1, Y1], [X1, Y1]]).
+clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 + 1, Y2 =:= Y1.
+clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 - 1, Y2 =:= Y1.
 clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 < X2, X is X1 + 1, Y is Y1,empty(Position, X, Y),
 													clearLinearLOS2(Position, [[X, Y],[X2, Y2]]).
 clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 > X2, X is X1 - 1, Y is Y1,empty(Position, X, Y),
 													clearLinearLOS2(Position, [[X, Y],[X2, Y2]]).
 													
-clearLinearLOS3(Position, [[X1, Y1], [X1, Y1]]).
+clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 =:= X2 - 1, Y1 =:= Y2 - 1.
+clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 =:= X2 + 1, Y1 =:= Y2 + 1.
 clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 < Y2, X is X1 + 1, Y is Y1 + 1,empty(Position, X, Y),
 													clearLinearLOS3(Position, [[X , Y],[X2, Y2]]).
 clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, X is X1 - 1, Y is Y1 - 1,empty(Position, X, Y),
