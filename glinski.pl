@@ -75,21 +75,21 @@ get_piece_at_position([[A, B, C, D]|T], X, Y, Piece, Type) :- get_piece_at_posit
 %----------------------------------------------------------------------------------
 %		Checking if the position coordinate given is empty
 %----------------------------------------------------------------------------------
-%empty(Position, X, Y, 1) :- get_piece_at_position(Position, X, Y, Piece, Type), !.
-%empty(Position, X, Y, 0).
-
+empty(Position, X, Y) :- get_piece_at_position(Position, X, Y, Piece, Type), !, fail.
+empty(Position, X, Y).
+/*
 empty([], X, Y, 1).
 empty([[X, Y, C, D]|T], X, Y, 0).
 empty([_|T], X, Y, Result) :- empty(T, X, Y, Result). 
-			
+	*/		
 %----------------------------------------------------------------------------------
 %		Checking if the move tried is legal
 %----------------------------------------------------------------------------------	
-legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X2, Y2, Piece1, C), other_type(Type, C), !, 
+legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X2, Y2, Piece1, C), other_type(Type, C), 
 												get_piece_at_position(Position, X1, Y1, Piece, Type),
 												specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 
 															
-legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	empty(Position, X2, Y2, Result), !, Result = 1, 
+legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	empty(Position, X2, Y2),  
 												get_piece_at_position(Position, X1, Y1, Piece, Type), 
 												specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]).
 
@@ -133,39 +133,39 @@ doublePawnBlackMove(X, Y) :- X = 10, Y = 7.
 doublePawnBlackMove(X, Y) :- X = 11, Y = 7.
 
 clearDiagonalLOS1(Position, [[X1, Y1], [X1, Y1]]).
-clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, X is X1 + 1, Y is Y1 + 2,empty(Position, X, Y, Result),!, Result = 1, 
+clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, X is X1 + 1, Y is Y1 + 2,empty(Position, X, Y),
 													clearDiagonalLOS1(Position, [[X, Y],[X2, Y2]]).
-clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, X is X1 - 1, Y is Y1 - 2,empty(Position, X, Y, Result),!, Result = 1, 
+clearDiagonalLOS1(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, X is X1 - 1, Y is Y1 - 2,empty(Position, X, Y),
 													clearDiagonalLOS1(Position, [[X, Y],[X2, Y2]]).
 clearDiagonalLOS2(Position, [[X1, Y1], [X1, Y1]]).
-clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, X is X1 + 2, Y is Y1 + 1,empty(Position, X, Y, Result),!, Result = 1, 
+clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2, X is X1 + 2, Y is Y1 + 1,empty(Position, X, Y),
 													clearDiagonalLOS2(Position, [[X, Y],[X2, Y2]]).
-clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, X is X1 - 2, Y is Y1 - 1,empty(Position, X, Y, Result),!, Result = 1, 
+clearDiagonalLOS2(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2, X is X1 - 2, Y is Y1 - 1,empty(Position, X, Y),
 													clearDiagonalLOS2(Position, [[X, Y],[X2, Y2]]).
 
 clearDiagonalLOS3(Position, [[X1, Y1], [X1, Y1]]).
-clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2,  X is X1 + 1, Y is Y1 - 1,empty(Position, X, Y, Result),!, Result = 1, 
+clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X1 < X2,  X is X1 + 1, Y is Y1 - 1,empty(Position, X, Y),
 													clearDiagonalLOS3(Position, [[X, Y],[X2, Y2]]).
-clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2,  X is X1 - 1, Y is Y1 + 1,empty(Position, X, Y, Result),!, Result = 1, 
+clearDiagonalLOS3(Position, [[X1, Y1], [X2, Y2]]) :- X1 > X2,  X is X1 - 1, Y is Y1 + 1,empty(Position, X, Y),
 													clearDiagonalLOS3(Position, [[X, Y],[X2, Y2]]).
 													
 													
 clearLinearLOS1(Position, [[X1, Y1], [X1, Y1]]).
-clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 < Y2, X is X1, Y is Y1 + 1,empty(Position, X, Y, Result),!, Result = 1, 
+clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 < Y2, X is X1, Y is Y1 + 1,empty(Position, X, Y),
 													clearLinearLOS1(Position, [[X , Y],[X2, Y2]]).
-clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, X is X1, Y is Y1 - 1,empty(Position, X, Y, Result),!, Result = 1, 
+clearLinearLOS1(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, X is X1, Y is Y1 - 1,empty(Position, X, Y),
 													clearLinearLOS1(Position, [[X, Y],[X2, Y2]]).	
 													
 clearLinearLOS2(Position, [[X1, Y1], [X1, Y1]]).
-clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 < X2, X is X1 + 1, Y is Y1,empty(Position, X, Y, Result),!, Result = 1, 
+clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 < X2, X is X1 + 1, Y is Y1,empty(Position, X, Y),
 													clearLinearLOS2(Position, [[X, Y],[X2, Y2]]).
-clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 > X2, empty(Position, X, Y, Result),!, Result = 1, X is X1 - 1, Y is Y1,empty(Position, X, Y, Result),!, Result = 1, 
+clearLinearLOS2(Position, [[X1, Y1], [X2, Y2]]) :- 	X1 > X2, X is X1 - 1, Y is Y1,empty(Position, X, Y),
 													clearLinearLOS2(Position, [[X, Y],[X2, Y2]]).
 													
 clearLinearLOS3(Position, [[X1, Y1], [X1, Y1]]).
-clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 < Y2, X is X1 + 1, Y is Y1 + 1,empty(Position, X, Y, Result),!, Result = 1, 
+clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 < Y2, X is X1 + 1, Y is Y1 + 1,empty(Position, X, Y),
 													clearLinearLOS3(Position, [[X , Y],[X2, Y2]]).
-clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, X is X1 - 1, Y is Y1 - 1,empty(Position, X, Y, Result),!, Result = 1, 
+clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, X is X1 - 1, Y is Y1 - 1,empty(Position, X, Y),
 													clearLinearLOS3(Position, [[X, Y],[X2, Y2]]).
 %dummy rule to allow all moves for the time being											
 %specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 						
@@ -177,7 +177,7 @@ clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, X is X1 - 1, Y is Y
 %	White Pawns	
 specificlegal(Position, p, w, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 + 1, Y2 =:= Y1 + 1.	
 specificlegal(Position, p, w, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 + 2, Y2 =:= Y1 + 2, X is X1 + 1, Y is Y1 + 1, 
-														empty(Position, X, Y, Result),!, Result = 1,
+														empty(Position, X, Y),
 														doublePawnWhiteMove(X1, Y1).	
 
 
@@ -190,7 +190,7 @@ specificlegal(Position, p, w, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 + 1, Y2 =:= Y1
 
 specificlegal(Position, p, b, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 - 1, Y2 =:= Y1 - 1.	
 specificlegal(Position, p, b, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 - 2, Y2 =:= Y1 - 2, X is X1 - 1, Y is Y1 - 1,
-														empty(Position, X, Y, Result),!, Result = 1,
+														empty(Position, X, Y),
 														doublePawnBlackMove(X1, Y1).	
 
 
