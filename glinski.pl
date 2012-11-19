@@ -9,6 +9,7 @@
 play(Position, Player, Result):- 	choose_move(Position, Player, Move),
 									move(Move, Position, Position1),
 									notCheckKing(Position1, Player),
+									existsNonCheckMoveForOpponent(Position1, Player),
 									display_game(Position1, Player),
 									next_player(Player, Player1),
 									!,
@@ -282,14 +283,22 @@ specificlegal3(Position, r, _, [[X1, Y1], [X2, Y2]], C, C1)	:- C =< 11, C2 is C 
 findKing([[X, Y, C, k]|T], C, X, Y).
 findKing([_|T], C, X, Y) :- findKing(T, C, X, Y).		
 
+%----------------------------------------------------------------------------------
+%						CHECKING FOR CHECK
+%----------------------------------------------------------------------------------
 checkKing(Position, Player) :- findKing(Position, Player, X, Y), 	legal(Position, Type, [[X1, Y1], [X, Y]]), other_type(Player, Type).			
 					
 notCheckKing(Position, Player) :- checkKing(Position, Player),!,fail.
 notCheckKing(Position, Player).				
-					
-					
-					
-					
+
+%----------------------------------------------------------------------------------
+%						CHECKMATE
+%----------------------------------------------------------------------------------					
+existsNonCheckMoveForOpponent(Position1, Player)	:- 	other_type(Player, Type), 
+													findKing(Position1, Type, X, Y), 
+													legal(Position1, Type, [[X1, Y1], [X2, Y2]]), 	
+													move([[X1, Y1], [X2, Y2]], Position1, Position2),
+													notCheckKing(Position2, Type). 			
 					
 					
 					
