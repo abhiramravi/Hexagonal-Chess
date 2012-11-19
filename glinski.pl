@@ -22,7 +22,8 @@ play(Game) :- 						initialize(Game, Position, Player),
 									play(Position, Player, Result).
 				
 choose_move(Position, Player, Move) :- 	read(Move), 
-										legal(Position, Player, Move).
+										legal(Position, Player, Move),
+										notCheckKing(Position, Player).
 										
 
 %----------------------------------------------------------------------------------
@@ -83,14 +84,16 @@ empty([_|T], X, Y, Result) :- empty(T, X, Y, Result).
 			
 %----------------------------------------------------------------------------------
 %		Checking if the move tried is legal
-%----------------------------------------------------------------------------------				
-legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	empty(Position, X2, Y2, Result),!, Result = 1, 
+%----------------------------------------------------------------------------------	
+legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X2, Y2, Piece1, C), other_type(Type, C), !, 
+												get_piece_at_position(Position, X1, Y1, Piece, Type),
+												specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 
+															
+legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	empty(Position, X2, Y2, Result), !, Result = 1, 
 												get_piece_at_position(Position, X1, Y1, Piece, Type), 
 												specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]).
 
-legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, X2, Y2, Piece1, C), C =:= other_type(Type), !, 
-												get_piece_at_position(Position, X1, Y1, Piece, Type),
-												specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 
+
 												
 %----------------------------------------------------------------------------------
 %		Performing the move given on the current board
@@ -267,11 +270,16 @@ specificlegal3(Position, r, _, [[X1, Y1], [X2, Y2]], C, C1)	:- C =< 11, X2 =:= X
 specificlegal3(Position, r, _, [[X1, Y1], [X2, Y2]], C, C1)	:- C =< 11, X2 =:= X1 + C, Y2 =:= Y1 + C, clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]).			
 specificlegal3(Position, r, _, [[X1, Y1], [X2, Y2]], C, C1)	:- C =< 11, C2 is C + 1, specificlegal3(Position, r, _, [[X1, Y1], [X2, Y2]], C2, C1).					
 					
+%----------------------------------------------------------------------------------
+%						FINDING THE KING
+%----------------------------------------------------------------------------------	
+findKing([[X, Y, C, k]|T], C, X, Y).
+findKing([_|T], C, X, Y) :- findKing(T, C, X, Y).		
+
+checkKing(Position, Player) :- findKing(Position, Player, X, Y), 	legal(Position, Type, [[X1, Y1], [X, Y]]), other_type(Player, Type).			
 					
-					
-					
-					
-					
+notCheckKing(Position, Player) :- checkKing(Position, Player),!,fail.
+notCheckKing(Position, Player).				
 					
 					
 					
