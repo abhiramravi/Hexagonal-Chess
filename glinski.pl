@@ -50,7 +50,7 @@ initialize(Game, Position, Player) :-
 							% The black pawns
 							[7, 11, b, p], [7, 10, b, p], [7, 9, b, p], [7, 8, b, p], [7, 7, b, p], [8, 7, b, p], [9, 7, b, p], [10, 7, b, p], [11, 7, b, p],
 							% Other pieces of black
-							[8, 11, b, r], [9, 11, b, n], [10, 11, b, q], [11, 10, b, k], [11, 9, b, n], [11, 8, b, r],
+							[8, 11, b, r], [9, 11, b, n], [10, 11, b, q], [11, 10, b, k],  [11, 8, b, r], [11, 9, b, n],
 							% The three bishops
 							[11, 11, b, b], [10, 10, b, b], [9, 9, b, b]
 												
@@ -59,8 +59,41 @@ initialize(Game, Position, Player) :-
 %----------------------------------------------------------------------------------
 %		Displaying the game
 %----------------------------------------------------------------------------------		
-display_game(Position, Player) :- write(Position).
+display_game(Position, Player) :-  			gap(16), write('__'), nl,
+										gap(13), left(X), gap(2), right(X),nl,
+								gap(10), left(X), gap(2), middle(X), gap(2), right(X),nl,
+								gap(7), left(X), gap(2), middle(X), gap(2), middle(X), gap(2), right(X), nl,
+								gap(4), left(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), right(X), nl,
+								gap(1), left(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), right(X), nl,
+								lend(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), rend(X), nl,
+								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
+								lend(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), rend(X), nl,
+								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
+								lend(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), rend(X), nl,
+								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
+								lend(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), rend(X), nl,
+								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
+								lend(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), rend(X), nl,
+								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
+								lend(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), rend(X), nl,
+								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
+								gap(3), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
+								gap(6), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X),  nl,
+								gap(9), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
+								gap(12), middle(X), gap(2), middle(X),nl,
+								gap(15), middle(X),nl. %, write(Position), nl.
 
+/* Printing gaps */
+gap(X) :- notgap(X), !, fail.
+gap(X).
+notgap(X) :- write(' '), Y is X -1, Y >0, notgap(Y).
+
+
+left(X) :- write('__/').
+right(X) :- write('\\__').
+middle(X) :- write('\\__/').
+rend(X) :- write('\\').
+lend(X) :- write('/').
 %func():-
 
 % Implementing NOT
