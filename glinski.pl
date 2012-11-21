@@ -93,12 +93,20 @@ display_game(Position, Player) :-  			gap(16), write('__'), nl,
 								middle(X), gap(Position, 3, 7), middle(X), gap(Position, 4, 6), middle(X), gap(Position, 5, 5), middle(X), 
 								gap(Position, 6, 4), middle(X), gap(Position, 7, 3), middle(X), nl,
 								
-								lend(X), gap(Position, 2, 7), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(Position, 7, 2), rend(X), nl,
-								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
-								lend(X), gap(Position, 1, 6), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(Position, 6, 1), rend(X), nl,
-								middle(X), gap(Position, 1 ,5), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(Position, 5, 1), middle(X), nl,
-								gap(3), middle(X), gap(Position, 1, 4), middle(X), gap(2), middle(X), gap(2), middle(X), gap(Position, 4 ,1), middle(X), nl,
-								gap(6), middle(X), gap(Position, 1, 3), middle(X), gap(2), middle(X), gap(Position, 3 ,1), middle(X),  nl,
+								lend(X), gap(Position, 2, 7), middle(X), gap(Position, 3, 6), middle(X), gap(Position, 4, 5), middle(X),
+								gap(Position, 5, 4), middle(X), gap(Position, 6, 3), middle(X), gap(Position, 7, 2), rend(X), nl,
+								
+								middle(X), gap(Position, 2, 6), middle(X), gap(Position, 3, 5), middle(X), gap(Position, 4, 4), middle(X), 
+								gap(Position, 5, 3), middle(X), gap(Position, 6, 2), middle(X), nl,
+								
+								lend(X), gap(Position, 1, 6), middle(X),  gap(Position, 2, 5), middle(X),  gap(Position, 3, 4), middle(X),  
+								gap(Position, 4, 3), middle(X),  gap(Position, 5, 2), middle(X), gap(Position, 6, 1), rend(X), nl,
+								
+								middle(X), gap(Position, 1 ,5), middle(X),  gap(Position, 2, 4), middle(X),  gap(Position, 3, 3), middle(X),  
+								gap(Position, 4, 2), middle(X), gap(Position, 5, 1), middle(X), nl,
+								
+								gap(3), middle(X), gap(Position, 1, 4), middle(X),  gap(Position, 2, 3), middle(X),  gap(Position, 3, 2), middle(X), gap(Position, 4 ,1), middle(X), nl,
+								gap(6), middle(X), gap(Position, 1, 3), middle(X),  gap(Position, 2, 2), middle(X), gap(Position, 3 ,1), middle(X),  nl,
 								gap(9), middle(X), gap(Position, 1, 2), middle(X), gap(Position, 2, 1), middle(X), nl,
 								gap(12), middle(X), gap(Position, 1, 1), middle(X),nl,
 								gap(15), middle(X),nl. %, write(Position), nl.
