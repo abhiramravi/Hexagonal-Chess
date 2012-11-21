@@ -60,33 +60,62 @@ initialize(Game, Position, Player) :-
 %		Displaying the game
 %----------------------------------------------------------------------------------		
 display_game(Position, Player) :-  			gap(16), write('__'), nl,
-										gap(13), left(X), gap(2), right(X),nl,
-								gap(10), left(X), gap(2), middle(X), gap(2), right(X),nl,
-								gap(7), left(X), gap(2), middle(X), gap(2), middle(X), gap(2), right(X), nl,
-								gap(4), left(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), right(X), nl,
-								gap(1), left(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), right(X), nl,
-								lend(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), rend(X), nl,
+										gap(13), left(X), gap(Position, 11, 11), right(X),nl,
+								gap(10), left(X), gap(Position, 10, 11), middle(X), gap(Position, 11, 10), right(X),nl,
+								gap(7), left(X), gap(Position, 9, 11), middle(X), gap(Position, 10, 10), middle(X), gap(Position, 11, 9), right(X), nl,
+								gap(4), left(X), gap(Position, 8, 11), middle(X), gap(Position, 9, 10), middle(X), gap(Position, 10, 9), middle(X), gap(Position, 11, 8), right(X), nl,
+								
+								gap(1), left(X), gap(Position, 7, 11),middle(X), gap(Position, 8, 10), middle(X), gap(Position, 9, 9), middle(X), 
+								gap(Position, 10, 8), middle(X), gap(Position, 11, 7),right(X), nl,
+								
+								lend(X), gap(Position, 6, 11), middle(X), gap(Position, 7, 10), middle(X), gap(Position, 8, 9), middle(X), gap(Position, 9, 8), 
+								middle(X), gap(Position, 10, 7), middle(X), gap(Position, 11, 6), rend(X), nl,
+								
+								
+								middle(X), gap(Position, 6, 10),middle(X), gap(Position, 7, 9), middle(X), gap(Position, 8, 8), middle(X), 
+								gap(Position, 9, 7), middle(X), gap(Position, 10, 6), middle(X), nl,
+								
+								lend(X), gap(Position, 5, 10), middle(X), gap(Position, 6, 9), middle(X), gap(Position, 7, 8), middle(X), 
+								gap(Position, 8, 7), middle(X), gap(Position, 9, 6), middle(X), gap(Position, 10, 5), rend(X), nl,
+								
+								middle(X), gap(Position, 5, 9), middle(X), gap(Position, 6, 8), middle(X), gap(Position, 7, 7), middle(X), 
+								gap(Position, 8, 6), middle(X), gap(Position, 9, 5), middle(X), nl,
+								
+								lend(X), gap(Position, 4, 9), middle(X), gap(Position, 5, 8), middle(X), gap(Position, 6, 7), middle(X), 
+								gap(Position, 7, 6), middle(X), gap(Position, 8, 5), middle(X), gap(Position, 9, 4), rend(X), nl,
+								
+								middle(X), gap(Position, 4, 8), middle(X), gap(Position, 5, 7), middle(X), gap(Position, 6, 6), middle(X),
+								gap(Position, 7, 5), middle(X), gap(Position, 8, 4), middle(X), nl,
+								
+								lend(X), gap(Position, 3, 8), middle(X), gap(Position, 4, 7), middle(X), gap(Position, 5, 6), middle(X), 
+								gap(Position, 6, 5), middle(X), gap(Position, 7, 4), middle(X), gap(Position, 8, 3), rend(X), nl,
+								
+								middle(X), gap(Position, 3, 7), middle(X), gap(Position, 4, 6), middle(X), gap(Position, 5, 5), middle(X), 
+								gap(Position, 6, 4), middle(X), gap(Position, 7, 3), middle(X), nl,
+								
+								lend(X), gap(Position, 2, 7), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(Position, 7, 2), rend(X), nl,
 								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
-								lend(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), rend(X), nl,
-								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
-								lend(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), rend(X), nl,
-								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
-								lend(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), rend(X), nl,
-								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
-								lend(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), rend(X), nl,
-								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
-								lend(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), rend(X), nl,
-								middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
-								gap(3), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
-								gap(6), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X),  nl,
-								gap(9), middle(X), gap(2), middle(X), gap(2), middle(X), nl,
-								gap(12), middle(X), gap(2), middle(X),nl,
+								lend(X), gap(Position, 1, 6), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(Position, 6, 1), rend(X), nl,
+								middle(X), gap(Position, 1 ,5), middle(X), gap(2), middle(X), gap(2), middle(X), gap(2), middle(X), gap(Position, 5, 1), middle(X), nl,
+								gap(3), middle(X), gap(Position, 1, 4), middle(X), gap(2), middle(X), gap(2), middle(X), gap(Position, 4 ,1), middle(X), nl,
+								gap(6), middle(X), gap(Position, 1, 3), middle(X), gap(2), middle(X), gap(Position, 3 ,1), middle(X),  nl,
+								gap(9), middle(X), gap(Position, 1, 2), middle(X), gap(Position, 2, 1), middle(X), nl,
+								gap(12), middle(X), gap(Position, 1, 1), middle(X),nl,
 								gap(15), middle(X),nl. %, write(Position), nl.
 
-/* Printing gaps */
+
+notgap(X) :- write(' '), Y is X -1, Y >0, notgap(Y).
+%----------------------------------------------------------------------------------
+%		Printing gaps for Hexagonal board testing
+%----------------------------------------------------------------------------------	
 gap(X) :- notgap(X), !, fail.
 gap(X).
-notgap(X) :- write(' '), Y is X -1, Y >0, notgap(Y).
+gap(Position, X, Y) :- get_piece_at_position(Position, X, Y, Piece, Type), write(Piece), write(Type).
+gap(Position, X, Y) :- gap(2).
+
+%----------------------------------------------------------------------------------
+%		Getting piece at particular position and printing it
+%----------------------------------------------------------------------------------	
 
 
 left(X) :- write('__/').
