@@ -6,11 +6,12 @@
 
 % The basic Game Playing template
 
-play(Position, Player, Result):- 	choose_move(Position, Player, Move),
-									move(Move, Position, Position1),
-									notCheckKing(Position1, Player),
-									existsNonCheckMoveForOpponent(Position1, Player),
-									display_game(Position1, Player),
+play(Position, Player, Result):- 	choose_move(Position, Player, Move),!,
+									move(Move, Position, Position1),!, write('moved'), nl,
+									display_game(Position1, Player),!, write('displayed'), nl,
+									notCheckKing(Position1, Player),!, write('King is not in check'), nl,
+									existsNonCheckMoveForOpponent(Position1, Player), 
+									!,write('Opponent is not checkmated'), nl,
 									next_player(Player, Player1),
 									!,
 									play(Position1, Player1, Result).
@@ -19,12 +20,16 @@ play(Position, Player, Result) :- 	game_over(Position, Player, Result),
 									!,
 									announce(Result).
 									
-play(Game) :- 						initialize(Game, Position, Player),
-									display_game(Position, Player),
+play(Game) :- 						initialize(Game, Position, Player),!,
+									display_game(Position, Player),!,
 									play(Position, Player, Result).
 				
-choose_move(Position, Player, Move) :- 	read(Move), 
+choose_move(Position, Player, Move) :- 	%Player = w,
+										read(Move), 
 										legal(Position, Player, Move).
+										
+%choose_move(Position, Player, Move) :- 	Player = b,
+%										legal(Position, Player, Move).										
 										
 
 %----------------------------------------------------------------------------------
@@ -109,7 +114,7 @@ display_game(Position, Player) :-  			gap(16), write('__'), nl,
 								gap(6), middle(X), gap(Position, 1, 3), middle(X),  gap(Position, 2, 2), middle(X), gap(Position, 3 ,1), middle(X),  nl,
 								gap(9), middle(X), gap(Position, 1, 2), middle(X), gap(Position, 2, 1), middle(X), nl,
 								gap(12), middle(X), gap(Position, 1, 1), middle(X),nl,
-								gap(15), middle(X),nl. %, write(Position), nl.
+								gap(15), middle(X),nl, write(Position), nl.
 
 
 notgap(X) :- write(' '), Y is X -1, Y >0, notgap(Y).
@@ -173,6 +178,7 @@ legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	empty(Position, X2, Y2),
 % the exit point of move and add to the Position1	
 
 move(_, [], []). 
+
 move([[X1, Y1],[X2, Y2]], [[X1, Y1, C, D]|T] , [[X2, Y2, C, D]|T1]) :- move([[X1, Y1],[X2, Y2]],T,T1).
 move([[X1, Y1],[X2, Y2]], [[X2, Y2, C, D]|T] , T1) :- move([[X1, Y1],[X2, Y2]], T, T1).
 move([[X1, Y1],[X2, Y2]], [[X, Y, C, D]|T], [[X, Y, C, D]|T1]) :-  move([[X1, Y1],[X2, Y2]], T, T1).
@@ -252,7 +258,7 @@ clearLinearLOS3(Position, [[X1, Y1], [X2, Y2]]) :- 	Y1 > Y2, X is X1 - 1, Y is Y
 %----------------------------------------------------------------------------------		
 
 %	White Pawns	
-specificlegal(Position, p, w, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 + 1, Y2 =:= Y1 + 1.	
+specificlegal(Position, p, w, [[X1, Y1], [X2, Y2]]) :- 	empty(Position, X2, Y2), X2 =:= X1 + 1, Y2 =:= Y1 + 1.	
 specificlegal(Position, p, w, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 + 2, Y2 =:= Y1 + 2, X is X1 + 1, Y is Y1 + 1, 
 														empty(Position, X, Y),
 														doublePawnWhiteMove(X1, Y1).	
@@ -265,7 +271,7 @@ specificlegal(Position, p, w, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 + 1, Y2 =:= Y1
 														get_piece_at_position(Position, X2, Y2, Piece1, b).														
 %	Black Pawns 
 
-specificlegal(Position, p, b, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 - 1, Y2 =:= Y1 - 1.	
+specificlegal(Position, p, b, [[X1, Y1], [X2, Y2]]) :- 	empty(Position, X2, Y2),X2 =:= X1 - 1, Y2 =:= Y1 - 1.	
 specificlegal(Position, p, b, [[X1, Y1], [X2, Y2]]) :- 	X2 =:= X1 - 2, Y2 =:= Y1 - 2, X is X1 - 1, Y is Y1 - 1,
 														empty(Position, X, Y),
 														doublePawnBlackMove(X1, Y1).	
@@ -356,19 +362,18 @@ findKing([_|T], C, X, Y) :- findKing(T, C, X, Y).
 %----------------------------------------------------------------------------------
 %						CHECKING FOR CHECK
 %----------------------------------------------------------------------------------
-checkKing(Position, Player) :- findKing(Position, Player, X, Y), 	legal(Position, Type, [[X1, Y1], [X, Y]]), other_type(Player, Type).			
+checkKing(Position, Player) :- findKing(Position, Player, X, Y), 	other_type(Player, Type),!, legal(Position, Type, [[X1, Y1], [X, Y]]).			
 					
-notCheckKing(Position, Player) :- checkKing(Position, Player),!,fail.
+notCheckKing(Position, Player) :- checkKing(Position, Player),!, fail.
 notCheckKing(Position, Player).				
 
 %----------------------------------------------------------------------------------
 %						CHECKMATE
 %----------------------------------------------------------------------------------					
-existsNonCheckMoveForOpponent(Position1, Player)	:- 	other_type(Player, Type), 
-													findKing(Position1, Type, X, Y), 
-													legal(Position1, Type, [[X1, Y1], [X2, Y2]]), 	
-													move([[X1, Y1], [X2, Y2]], Position1, Position2),
-													notCheckKing(Position2, Type). 			
+existsNonCheckMoveForOpponent(Position1, Player). % :- 	other_type(Player, Type),!, 
+												%	legal(Position1, Type, [[X1, Y1], [X2, Y2]]), 	
+												%	move([[X1, Y1], [X2, Y2]], Position1, Position2),
+												%	notCheckKing(Position2, Type). 		
 					
 					
 					
