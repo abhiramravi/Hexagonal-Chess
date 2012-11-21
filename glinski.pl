@@ -30,8 +30,9 @@ choose_move(Position, Player, Move) :- 	Player = w,
 										
 choose_move(Position, Player, Move) :- 	Player = b,!, 
 										legal(Position, Player, [[X1, Y1], [X2, Y2]]),
-										Move = [[X1, Y1], [X2, Y2]].										
-										
+										Move = [[X1, Y1], [X2, Y2]],
+										move(Move, Position, Position1),
+										notCheckKing(Position1, Player).
 
 %----------------------------------------------------------------------------------
 %		The implementations of the above functions
