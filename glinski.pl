@@ -26,13 +26,88 @@ play(Game) :- 						initialize(Game, Position, Player),!,
 				
 choose_move(Position, Player, Move) :- 	Player = w,
 										read(Move), 
-										legal(Position, Player, Move).
-										
+										legal(Position, Player, Move),
+										checkLimits(Move).
+	
+%----------------------------------------------------------------------------------
+%		The Random AI
+%----------------------------------------------------------------------------------	
+/*								
 choose_move(Position, Player, Move) :- 	Player = b,!, 
 										legal(Position, Player, [[X1, Y1], [X2, Y2]]),
 										Move = [[X1, Y1], [X2, Y2]],
+										checkLimits(Move),
 										move(Move, Position, Position1),
 										notCheckKing(Position1, Player).
+*/										
+%----------------------------------------------------------------------------------
+%		The Evaluation AI
+%----------------------------------------------------------------------------------	
+
+choose_move(Position, Player, Move) :- 	Player = b,!, 
+										setof([[X1, Y1], [X2, Y2]], legal2(Position, Player, [[X1, Y1], [X2, Y2]])	, Moves),
+										write('Moves = '), write(Moves),
+										evaluateChoose(Moves, Position, Record, BestMove),
+										Move = BestMove,
+										move(Move, Position, Position1),
+										notCheckKing(Position1, Player).
+
+evaluateChoose([], Position, Record, Record).										
+evaluateChoose([Move|Moves], Position, Record, BestMove) :- 	move(Move, Position, Position1),
+															value(Position1, Value),
+															update(Value, Record, Record1),
+															evaluateChoose(Moves, Position, Record1, BestMove).		
+															
+update(Value, Record, Record1) :- value(Record, V1), V1 > Record, Record1 = V1.
+update(Value, Record, Record).
+
+legal2(Position, Player, [[X1, Y1], [X2, Y2]])	:- legal(Position, Player, [[X1, Y1], [X2, Y2]]), checkLimits([[X1, Y1], [X2, Y2]]).
+																						
+%----------------------------------------------------------------------------------
+%		Minimax AI
+%----------------------------------------------------------------------------------
+/*
+choose_move(Position, Player, Move) :- 	Player = b, !, 
+										setof(M, legal(Position, Player, M), Moves),
+										evaluate_and_choose(Moves, Position, 2, -100, 100, BestMove).
+										
+% evaluate_and_choose(Moves, Position, Depth, Flag, Record, BestMove) 
+evaluate_and_choose([Move|Moves], Position, D, MaxMin, Record, BestMove) :- 	move(Move, Position, Position1),
+																			minimax(D, Position1, MaxMin, Max, Value),
+																			update(Max, Value, Record, Record1),
+																			evaluate_and_choose(Moves, Position, D, MaxMin, Record1, BestMove).
+																			
+evaluate_and_choose([], Position, D, MaxMin, Record, Record).
+
+
+minimax(D, Position, MaxMin, Move, Value) :- 	D > 0, setof(M, legal(Position, MaxMin, M), Moves),
+												D1 is D - 1, MinMax is -MaxMin,
+												evaluate_and_choose(Moves, Position, D1, MinMax, (nil, -1000), (Move, Value)).																						 
+minimax(D, Position, MaxMin, Move, Value) :- 	value(Position, Value), write('3').
+
+
+
+
+update(Max, Value, Record, Record1) :-  write('1'), Value > Record, write('2'), Record1 = Value.
+update(Max, Value, Record, Record1).
+*/
+%----------------------------------------------------------------------------------
+%		An Evaluation function based on material 
+%----------------------------------------------------------------------------------		
+value([], 0).
+value([[X, Y, C, D]|T], V) :- value(T, V1), pieceValue(C, D, V2), V is V1 + V2.
+
+pieceValue(C, D, V) :- C is b, D is p, V is 1.
+pieceValue(C, D, V) :- C is b, D is b, V is 3.
+pieceValue(C, D, V) :- C is b, D is r, V is 5.
+pieceValue(C, D, V) :- C is b, D is n, V is 3.
+pieceValue(C, D, V) :- C is b, D is q, V is 8.
+pieceValue(C, D, V) :- C is w, D is p, V is -1.
+pieceValue(C, D, V) :- C is w, D is b, V is -3.
+pieceValue(C, D, V) :- C is w, D is r, V is -5.
+pieceValue(C, D, V) :- C is w, D is n, V is -3.
+pieceValue(C, D, V) :- C is w, D is q, V is -8.
+
 
 %----------------------------------------------------------------------------------
 %		The implementations of the above functions
@@ -174,12 +249,12 @@ legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	get_piece_at_position(Position, 
 												get_piece_at_position(Position, X1, Y1, Piece, Type),
 												specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]). 
 															
-legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	write('Entered2'),nl, empty2(Position, X2, Y2, Result), Result = 1,  write('Entered4'),nl,
-												get_piece_at_position(Position, X1, Y1, Piece, Type), write('Entered5'),nl,
-												specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]), write(X1),nl,write(Y1),nl,write(X2),nl,write(Y2),nl.
+legal(Position, Type, [[X1, Y1], [X2, Y2]]) :- 	/*write('Entered2'),nl,*/ empty2(Position, X2, Y2, Result), Result = 1,  /*write('Entered4'),nl,*/
+												get_piece_at_position(Position, X1, Y1, Piece, Type), /*write('Entered5'),nl,*/
+												specificlegal(Position, Piece, Type, [[X1, Y1], [X2, Y2]]).%, write(X1),nl,write(Y1),nl,write(X2),nl,write(Y2),nl.
 
 
-												
+checkLimits([[X1, Y1], [X2, Y2]]) :-	X1 > 0, X2 > 0, Y1 > 0, Y2 > 0, X1 < 12, X2 < 12, Y1 < 12, Y2 < 12.											
 %----------------------------------------------------------------------------------
 %		Performing the move given on the current board
 %----------------------------------------------------------------------------------	
@@ -379,10 +454,10 @@ notCheckKing(Position, Player).
 %----------------------------------------------------------------------------------
 %						CHECKMATE
 %----------------------------------------------------------------------------------					
-existsNonCheckMoveForOpponent(Position1, Player). % :- 	other_type(Player, Type),!, 
-												%	legal(Position1, Type, [[X1, Y1], [X2, Y2]]), 	
-												%	move([[X1, Y1], [X2, Y2]], Position1, Position2),
-												%	notCheckKing(Position2, Type). 		
+existsNonCheckMoveForOpponent(Position1, Player). :- 	other_type(Player, Type),!, 
+													legal(Position1, Type, [[X1, Y1], [X2, Y2]]), 	
+													move([[X1, Y1], [X2, Y2]], Position1, Position2),
+													notCheckKing(Position2, Type). 		
 					
 					
 					
