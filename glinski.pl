@@ -37,8 +37,9 @@ choose_move(Position, Player, Move) :- 	Player = b,!,
                                         getListValidMoves(Position, Player, Moves),
                                         listSize(Moves, Size),
                                         write(Size),
-                                        getAIMove(Moves, Position, 0, -1500, 1500, Player, Move1, Move),
+                                        getAIMove(Moves, Position, 0, -2500, 2500, Player, Move1, Move2),
                                         write('Found'),nl,
+                                        Move2 = (Move, T),
                                         write(Move),
 										move(Move, Position, Position1),
 										notCheckKing(Position1, Player).
@@ -476,13 +477,11 @@ existsNonCheckMoveForOpponent(Position1, Player). :- 	other_type(Player, Type),!
 
 getAIMove([Move|Moves], Position, Depth, Alpha, Beta, Player, Record, BestMove)  :-  
                                                     move(Move, Position, Position1),
-                                                    write(Move),nl,
                                                     %display_game(Position1, Player),!, write('displayed'), nl,
                                                     alpha_beta(Depth, Position1, Alpha, Beta, Value, Player, MoveX),
                                                     Value1 is -Value,
-                                                    write(Value1),nl,
                                                     cutoff(Move, Value1, Depth, Alpha, Beta, Moves, Position, Player, Record, BestMove).
-getAIMove([], Position, Depth, Alpha, Beta, Player, Record, Record).
+getAIMove([], Position, Depth, Alpha, Beta, Player, Record, (Record,Alpha)).
 
 %----------------------------------------------------------------------------------
 %                       ALPHA BETA PRUNING
@@ -490,26 +489,25 @@ getAIMove([], Position, Depth, Alpha, Beta, Player, Record, Record).
 
 alpha_beta(0, Position, Alpha, Beta, Value, Player, Record)   :-  next_player(Player, Player1), evalVal(Position, Player, Player1, Value).
 
-alpha_beta(Depth, Positon, Alpha, Beta, Value, Player, Record)  :-  next_player(Player, Player1),
+alpha_beta(Depth, Position, Alpha, Beta, Value, Player, Record)  :-  
+                                                            next_player(Player, Player1),
                                                             getListValidMoves(Position, Player1, Moves),
-                                                            write(Alpha), write(Beta),nl,
                                                             Alpha1 is -Beta,
                                                             Beta1 is -Alpha,
                                                             D1 is Depth-1,
-                                                            write(Depth), nl,
-                                                            getAIMove(Moves, Position, D1, Alpha1, Beta1, Player1, nil, Record).
+                                                            getAIMove(Moves1, Position, D1, Alpha1, Beta1, Player1, nil, (Record, Value)).
 
 %-----------------------------------------------------------------------------------
 %                       CUT-OFF RULE
 %-----------------------------------------------------------------------------------
 
-cutoff(Move, Value, Depth, Alpha, Beta, Moves, Position, Player, Record, BestMove)  :-  
+cutoff(Move, Value, Depth, Alpha, Beta, Moves, Position, Player, Record, (Move, Value))  :-  
                                                                     Value >= Beta.
 cutoff(Move, Value, Depth, Alpha, Beta, Moves, Position, Player, Record, BestMove)  :-  
                                                                     Alpha < Value, Value < Beta,
-                                                                    write(Alpha), write(' '), write(Beta), nl,
-                                                                    move(Move, Position, Position1),
-                                                                    display_game(Position1, Player),!, write('displayed'), nl,
+                                                                    %write(Alpha), write(' '), write(Beta), nl,
+                                                                    %move(Move, Position, Position1),
+                                                                    %display_game(Position1, Player),!, write('displayed'), nl,
                                                                     getAIMove(Moves, Position, Depth, Value, Beta, Player, Move, BestMove).
 cutoff(Move, Value, Depth, Alpha, Beta, Moves, Position, Player, Record, BestMove)  :-  
                                                                     Value =< Alpha,
@@ -533,12 +531,12 @@ evalVal([ [X1, Y1, Player, A] | T], Player, Player1, Value)   :-
 %                       PIECEWISE COUNT
 %-----------------------------------------------------------------------------------
 
-getVal(k, 500).
-getVal(n, 40).
-getVal(b, 50).
-getVal(r, 70).
+getVal(k, 1000).
+getVal(n, 60).
+getVal(b, 90).
+getVal(r, 150).
 getVal(p, 10).
-getVal(q, 200).
+getVal(q, 500).
                  
 
 %-----------------------------------------------------------------------------------
