@@ -34,18 +34,16 @@ choose_move(Position, Player, Move) :- 	Player = w,
 %----------------------------------------------------------------------------------	
 								
 choose_move(Position, Player, Move) :- 	Player = b,!, 
-                                        getListValidMoves(Position, Player, Moves),
-                                        listSize(Moves, Size),
-                                        write(Size),
-                                        getAIMove(Moves, Position, 0, -2500, 2500, Player, Move1, Move2),
-                                        write('Found'),nl,
+                                        getListValidMoves(Position, Player, Moves1),
+                                        getCorrectMove(Position, Moves1, Moves2, Player),
+                                        getFirstTen(Moves2, Moves, 40),
+                                        %listSize(Moves, Size),
+                                        %write(Size),
+                                        getAIMove(Moves, Position, 1, -5000, 5000, Player, Move1, Move2),
                                         Move2 = (Move, T),
-                                        write(Move),
 										move(Move, Position, Position1),
 										notCheckKing(Position1, Player).
 										
-listSize([], 0).
-listSize([H|T], Size):- listSize(T, Size1), Size is Size1+1.
 %----------------------------------------------------------------------------------
 %		The Evaluation AI
 %----------------------------------------------------------------------------------	
@@ -458,11 +456,12 @@ findKing([_|T], C, X, Y) :- findKing(T, C, X, Y).
 %----------------------------------------------------------------------------------
 %						CHECKING FOR CHECK
 %----------------------------------------------------------------------------------
-checkKing(Position, Player) :- findKing(Position, Player, X, Y), 	other_type(Player, Type),!, legal(Position, Type, [[X1, Y1], [X, Y]]).			
+checkKing(Position, Player) :- findKing(Position, Player, X, Y), other_type(Player, Type),!, legal(Position, Type, [[X1, Y1], [X, Y]]).			
 					
 notCheckKing(Position, Player) :- checkKing(Position, Player),!, fail.
 notCheckKing(Position, Player).				
 
+checkCheck(Position, Player)    :-  findKing(Position, Player, X, Y), other_type(Player, Type), legal(Position, Type, [[X1, Y1], [X, Y]]).
 %----------------------------------------------------------------------------------
 %						CHECKMATE
 %----------------------------------------------------------------------------------					
@@ -477,7 +476,6 @@ existsNonCheckMoveForOpponent(Position1, Player). :- 	other_type(Player, Type),!
 
 getAIMove([Move|Moves], Position, Depth, Alpha, Beta, Player, Record, BestMove)  :-  
                                                     move(Move, Position, Position1),
-                                                    %display_game(Position1, Player),!, write('displayed'), nl,
                                                     alpha_beta(Depth, Position1, Alpha, Beta, Value, Player, MoveX),
                                                     Value1 is -Value,
                                                     cutoff(Move, Value1, Depth, Alpha, Beta, Moves, Position, Player, Record, BestMove).
@@ -487,15 +485,20 @@ getAIMove([], Position, Depth, Alpha, Beta, Player, Record, (Record,Alpha)).
 %                       ALPHA BETA PRUNING
 %----------------------------------------------------------------------------------
 
-alpha_beta(0, Position, Alpha, Beta, Value, Player, Record)   :-  next_player(Player, Player1), evalVal(Position, Player, Player1, Value).
+
+alpha_beta(0, Position, Alpha, Beta, Value, Player, Record) :-  next_player(Player, Player1), evalVal(Position, Player, Player1, Value).
 
 alpha_beta(Depth, Position, Alpha, Beta, Value, Player, Record)  :-  
                                                             next_player(Player, Player1),
-                                                            getListValidMoves(Position, Player1, Moves),
+                                                            getListValidMoves(Position, Player1, Moves1),
+                                                            getCorrectMove(Position, Moves1, Moves2, Player1),
+                                                            getFirstTen(Moves2, Moves, 40),
+                                                            %listSize(Moves, Size),
+                                                            %write(Size),nl,
                                                             Alpha1 is -Beta,
                                                             Beta1 is -Alpha,
                                                             D1 is Depth-1,
-                                                            getAIMove(Moves1, Position, D1, Alpha1, Beta1, Player1, nil, (Record, Value)).
+                                                            getAIMove(Moves, Position, D1, Alpha1, Beta1, Player1, nil, (Record, Value)).
 
 %-----------------------------------------------------------------------------------
 %                       CUT-OFF RULE
@@ -505,9 +508,6 @@ cutoff(Move, Value, Depth, Alpha, Beta, Moves, Position, Player, Record, (Move, 
                                                                     Value >= Beta.
 cutoff(Move, Value, Depth, Alpha, Beta, Moves, Position, Player, Record, BestMove)  :-  
                                                                     Alpha < Value, Value < Beta,
-                                                                    %write(Alpha), write(' '), write(Beta), nl,
-                                                                    %move(Move, Position, Position1),
-                                                                    %display_game(Position1, Player),!, write('displayed'), nl,
                                                                     getAIMove(Moves, Position, Depth, Value, Beta, Player, Move, BestMove).
 cutoff(Move, Value, Depth, Alpha, Beta, Moves, Position, Player, Record, BestMove)  :-  
                                                                     Value =< Alpha,
@@ -544,4 +544,40 @@ getVal(q, 500).
 %-----------------------------------------------------------------------------------
 
 getListValidMoves(Position, Player, Moves)  :- setof([[X1, Y1], [X2, Y2]], legal2(Position, Player, [[X1, Y1], [X2, Y2]]), Moves).
+
+%-----------------------------------------------------------------------------------
+%                       RULE TO REMOVE INVALID MOVES
+%-----------------------------------------------------------------------------------
+
+getCorrectMove(_, [], [], _).
+getCorrectMove( Position, [H | T] , [ H | T1] , Player)   :-  checkMoveLegal(Position, Player, H),
+                                                              getCorrectMove( Position, T , T1 , Player).
+getCorrectMove( Position, [H | T] , T1 , Player)  :-  \+checkMoveLegal(Position, Player, H),
+                                                      getCorrectMove( Position, T , T1 , Player).
+                                                      
+%-----------------------------------------------------------------------------------
+%                       INVALID MOVE CHECK
+%-----------------------------------------------------------------------------------
+
+checkMoveLegal(Position, Player, [[X1,Y1],[X2,Y2]])  :- \+empty(Position, X1, Y1), get_piece_at_position(Position, X1, Y1, Piece, Type),
+                                                        Type == Player, 
+                                                        checkDestination(Position, Player, [[X1,Y1],[X2,Y2]]).
+                                                        %checkInValidCheck(Position, Player, [[X1,Y1],[X2,Y2]]).
+checkDestination(Position, Player, [[X1,Y1],[X2,Y2]])  :-   empty(Position, X2, Y2).
+checkDestination(Position, Player, [[X1,Y1],[X2,Y2]])  :-   \+empty(Position, X2, Y2),
+                                                            get_piece_at_position(Position, X2, Y2, Piece, Type),
+                                                            Type \== Player.
+checkInValidCheck(Position, Player, Move)   :-  move(Move, Position, Position1),
+                                                notCheckKing(Position1, Player).  
+                                                                                   
+%-----------------------------------------------------------------------------------
+%                       HELPER RULES
+%-----------------------------------------------------------------------------------                                                                     
+
+getFirstTen([],[],_).                                                                      
+getFirstTen(_,[],0).
+getFirstTen([H|T], [H|T1], Depth) :- Depth1 is Depth-1, getFirstTen(T, T1, Depth1).										
+
+listSize([], 0).
+listSize([H|T], Size):- listSize(T, Size1), Size is Size1+1.
 
