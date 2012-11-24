@@ -37,11 +37,12 @@ choose_move(Position, Player, Move) :- 	Player = b,!,
                                         getListValidMoves(Position, Player, Moves),
                                         listSize(Moves, Size),
                                         write(Size),
-                                        getAIMove(Moves, Position, 0, -1500, 1500, Player, Move1, Move),
+                                        getAIMove(Moves, Position, 0, -1500, 1500, Player, Move1, BestMove),
                                         write('Found'),nl,
-                                        write(Move),
-										move(Move, Position, Position1),
-										notCheckKing(Position1, Player).
+                                        write(BestMove),
+										move(BestMove, Position, Position1),
+										notCheckKing(Position1, Player),
+										Move is BestMove.
 										
 listSize([], 0).
 listSize([H|T], Size):- listSize(T, Size1), Size is Size1+1.
