@@ -26,8 +26,7 @@ play(Game) :- 						initialize(Game, Position, Player),!,
 				
 choose_move(Position, Player, Move) :- 	Player = w,
 										read(Move), 
-										legal(Position, Player, Move),
-										checkLimits(Move).
+                                        checkMoveLegal(Position, Player, Move),
 	
 %----------------------------------------------------------------------------------
 %		The Random AI
@@ -561,7 +560,8 @@ getCorrectMove( Position, [H | T] , T1 , Player)  :-  \+checkMoveLegal(Position,
 
 checkMoveLegal(Position, Player, [[X1,Y1],[X2,Y2]])  :- \+empty(Position, X1, Y1), get_piece_at_position(Position, X1, Y1, Piece, Type),
                                                         Type == Player, 
-                                                        checkDestination(Position, Player, [[X1,Y1],[X2,Y2]]).
+                                                        checkDestination(Position, Player, [[X1,Y1],[X2,Y2]]),
+                                                        legal2(Position, Player, [[X1,Y1],[X2,Y2]]).
                                                         %checkInValidCheck(Position, Player, [[X1,Y1],[X2,Y2]]).
 checkDestination(Position, Player, [[X1,Y1],[X2,Y2]])  :-   empty(Position, X2, Y2).
 checkDestination(Position, Player, [[X1,Y1],[X2,Y2]])  :-   \+empty(Position, X2, Y2),
